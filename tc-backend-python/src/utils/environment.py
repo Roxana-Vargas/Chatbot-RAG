@@ -1,0 +1,27 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+AMAZON_REGION = os.getenv("AMAZON_REGION")
+
+PG_HOST = os.getenv("PG_HOST")
+PG_PORT = os.getenv("PG_PORT")
+PG_USER =  os.getenv("PG_USER")
+PG_PASSWORD = os.getenv("PG_PASSWORD")
+PG_DATABASE = os.getenv("PG_DATABASE")
+
+COLLECTION_NAME = os.getenv("COLLECTION_NAME")
+EMBEDDINGS_TABLE = os.getenv("EMBEDDINGS_TABLE")
+COLLECTIONS_TABLE = os.getenv("COLLECTIONS_TABLE")
+
+SECRET_NAME = os.getenv("SECRET_NAME")
+LLM_PROVIDER = os.getenv("LLM_PROVIDER")
+LLM_MODEL_ID = os.getenv("LLM_MODEL_ID")
+PROMPT_TEMPLATE = os.getenv("PROMPT_TEMPLATE")
+EMBEDDINGS_PROVIDER = os.getenv("EMBEDDINGS_PROVIDER")
+EMBEDDINGS_MODEL_ID = os.getenv("EMBEDDINGS_MODEL_ID")
+
+print("PG_PORT", PG_PORT)
+CONNECTION_URL = f"postgresql://{PG_USER}:{PG_PASSWORD}@{PG_HOST}:{PG_PORT}/{PG_DATABASE}"
+print("CONNECTION_URL", CONNECTION_URL)

@@ -1,0 +1,70 @@
+service: tc-chatbot-backend-python
+
+useDotenv: true
+
+provider:
+  name: aws
+  ecr:
+    images:
+      chatbot:
+        path: . 
+  runtime: python3.11
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - secretsmanager:GetSecretValue
+      Resource: "*"
+
+    - Effect: Allow
+      Action:
+        - bedrock:InvokeModel
+      Resource: "*"
+  environment:
+    SECRET_NAME: ${env:SECRET_NAME}
+    AMAZON_REGION: ${env:AMAZON_REGION}
+    EMBEDDINGS_MODEL_ID: ${env:EMBEDDINGS_MODEL_ID}
+    LLM_MODEL_ID: ${env:LLM_MODEL_ID}
+    COLLECTIONS_TABLE: ${env:COLLECTIONS_TABLE}
+    EMBEDDINGS_TABLE: ${env:EMBEDDINGS_TABLE}
+    COLLECTION_NAME: ${env:COLLECTION_NAME}
+    PROMPT_TEMPLATE: ${env:PROMPT_TEMPLATE}
+    EMBEDDINGS_PROVIDER: ${env:EMBEDDINGS_PROVIDER}
+    LLM_PROVIDER: ${env:LLM_PROVIDER}
+
+  tags:
+    project: tc-backend-python
+    owner: olinda-vargas
+    environment: dev
+    cost-center: tc-backend-python
+
+functions:
+  chatbot:
+    image: 
+      name: chatbot
+      command:
+        - src.handlers.chatbot.handler
+    # handler: src.handlers.chatbot.handler
+    events:
+      - http:
+          path: chatbot
+          method: post
+          cors: true
+    timeout: 30
+  
+  metrics:
+    image: 
+      name: chatbot
+      command:
+        - src.handlers.metrics.handler
+    # handler: src.handlers.metrics.handler
+    events:
+      - http:
+          path: metrics
+          method: post
+          cors: true
+    timeout: 30
+
+plugins:
+  - serverless-offline
+  - serverless-dotenv-plugin
